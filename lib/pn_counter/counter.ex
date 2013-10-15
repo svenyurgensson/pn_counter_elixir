@@ -16,7 +16,7 @@ defmodule PnCounter.Counter do
       true ->
         start_link({0,0})
       _    ->
-        IO.puts "Error connecting to master counter, check cookies, network connection and repeat"
+        IO.puts "Error connecting to master counter, check cookies, network connection and restart\n"
         System.halt(1)
     end
   end
