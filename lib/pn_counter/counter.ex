@@ -6,13 +6,12 @@ defmodule PnCounter.Counter do
   # External API
 
   def start_link() when node() == @master_node do
-    IO.puts "Master node starting"
+    IO.puts "Master node started"
     start_link({0,0})
   end
 
   def start_link() do
-    IO.puts "Slave node starting"
-    IO.puts "Node: #{node()} master: #{@master_node}"
+    IO.puts "Slave node: #{node()} started, master: #{@master_node}"
     case :net_kernel.connect_node(@master_node) do
       true ->
         start_link({0,0})
