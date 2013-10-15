@@ -1,6 +1,6 @@
 # PnCounter
 
-My attempt to implement distributed CRDT PN-Counter
+My naive attempt to implement distributed CRDT PN-Counter
 
 ### Getting code and dependancies
 
@@ -54,8 +54,7 @@ Decrement value:
     content-length: 0
 
 
-### Based on
-
+### Theory and papers based on
 
 Here are links to more info about Convergent Replicated Data Types (the state-based variant):
 
