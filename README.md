@@ -4,9 +4,9 @@ My attempt to implement distributed CRDT PN-Counter
 
 ## Getting code and dependancies
 
-    git clone https://github.com/svenyurgensson/pn_counter_elixir.git
+    git clone https://github.com/svenyurgensson/pn_counter_elixir.git pn_counter
 
-    cd pn_counter_elixir/
+    cd pn_counter/
     mix deps.get
 
 ## Starting nodes
