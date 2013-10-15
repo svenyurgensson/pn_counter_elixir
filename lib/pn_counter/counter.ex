@@ -36,6 +36,7 @@ defmodule PnCounter.Counter do
         remote_node <- {:pn_counter_request, pid}
     end
     :pg2.join(:pn_counter, pid)
+    IO.puts "Members: #{inspect :pg2.get_members(:pn_counter)}"
     result
   end
 
@@ -75,14 +76,19 @@ defmodule PnCounter.Counter do
     { :noreply, new_value }
   end
 
-  def handle_info({:pg_message, _from , :pn_counter_value, {rem_p, rem_n}}, {p_counter, n_counter})  do
+  def handle_info({:pn_counter_value, {rem_p, rem_n}}, {p_counter, n_counter})  do
     if rem_p > p_counter, do: p_counter = rem_p
     if rem_n > n_counter, do: n_counter = rem_n
     {:noreply, {p_counter, n_counter}}
   end
 
-  def handle_info({:pg_message, from , :pn_counter_request}, current_value)  do
+  def handle_info({:pn_counter_request, from}, current_value)  do
     from <- {:pn_counter_value, current_value}
+    {:noreply, current_value}
+  end
+
+  def handle_info(msg, current_value) do
+    IO.puts "Received: #{inspect msg}"
     {:noreply, current_value}
   end
 
