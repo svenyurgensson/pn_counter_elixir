@@ -90,17 +90,21 @@ defmodule PnCounter.Counter do
   end
 
   defp downstream(value) do
-    IO.puts " Downstream Value: #{inspect value}"
+    :net_kernel.connect_node(@master_node)
     gr_members = :pg2.get_members(:pn_counter)
-    IO.puts "--> Members: #{inspect gr_members}"
+    IO.puts "Downstream value: #{inspect value} to counter group members: #{inspect gr_members}"
     case gr_members  do
       {:error, _} -> :ok
       []          -> :ok
-      pids        -> downstream(pids -- [self()], value)
+      pids        -> downstream(pids, value)
     end
   end
 
   defp downstream([], _value), do: :ok
+
+  defp downstream([pid | rest], value) when pid == self() do
+    downstream(rest, value)
+  end
 
   defp downstream([pid | rest], value) do
     pid <- {:pn_counter_value, value}
