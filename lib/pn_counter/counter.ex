@@ -66,20 +66,18 @@ defmodule PnCounter.Counter do
 
   def handle_cast(:increment, {p_counter, n_counter}) do
     new_value = {p_counter + 1, n_counter}
-    share_new_value(new_value)
+    downstream(new_value)
     { :noreply, new_value }
   end
 
   def handle_cast(:decrement, {p_counter, n_counter}) do
     new_value = {p_counter, n_counter + 1}
-    share_new_value(new_value)
+    downstream(new_value)
     { :noreply, new_value }
   end
 
   def handle_info({:pn_counter_value, {rem_p, rem_n}}, {p_counter, n_counter})  do
-    if rem_p > p_counter, do: p_counter = rem_p
-    if rem_n > n_counter, do: n_counter = rem_n
-    {:noreply, {p_counter, n_counter}}
+    {:noreply, { Enum.max([p_counter, rem_p]), Enum.max([n_counter, rem_n]) }}
   end
 
   def handle_info({:pn_counter_request, from}, current_value)  do
@@ -92,19 +90,22 @@ defmodule PnCounter.Counter do
     {:noreply, current_value}
   end
 
-  defp share_new_value(value) do
-    case :pg2.get_members(:pn_counter) do
+  defp downstream(value) do
+    IO.puts " Downstream Value: #{inspect value}"
+    gr_members = :pg2.get_members(:pn_counter)
+    IO.puts "--> Members: #{inspect gr_members}"
+    case gr_members  do
       {:error, _} -> :ok
       []          -> :ok
-      pids        -> share_new_value(pids -- [self()], value)
+      pids        -> downstream(pids -- [self()], value)
     end
   end
 
-  defp share_new_value([], _value), do: :ok
+  defp downstream([], _value), do: :ok
 
-  defp share_new_value(pids, value) do
-    IO.puts "Pids: #{inspect pids}"
-    pids <- {:pn_counter_value, value}
+  defp downstream([pid | rest], value) do
+    pid <- {:pn_counter_value, value}
+    downstream(rest, value)
   end
 
 end
