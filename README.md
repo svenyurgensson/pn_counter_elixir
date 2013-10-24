@@ -42,8 +42,17 @@ Increment value:
     HTTP/1.1 201 Created
     connection: keep-alive
     server: Cowboy
-    date: Tue, 15 Oct 2013 04:32:37 GMT
+    date: Tue, 15 Oct 2013 04:34:37 GMT
     content-length: 0
+
+    >curl -i -X GET http://localhost:8000/counter
+    HTTP/1.1 200 OK
+    connection: keep-alive
+    server: Cowboy
+    date: Tue, 15 Oct 2013 04:35:12 GMT
+    content-length: 1
+    1
+
 
 Decrement value:
 
