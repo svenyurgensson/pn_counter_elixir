@@ -34,6 +34,7 @@ Get current counter value:
     server: Cowboy
     date: Tue, 15 Oct 2013 04:32:47 GMT
     content-length: 1
+    0
 
 Increment value:
 
