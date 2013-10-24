@@ -1,20 +1,20 @@
 defmodule PnCounter.Handlers.CounterHandler do
 
-  def init(_transport, req, [pid_counter]) do
-    {:ok, req, pid_counter}
+  def init(_transport, req, []) do
+    {:ok, req, []}
   end
 
-  def handle(req, pid_counter) do
+  def handle(req, _) do
     case :cowboy_req.get(:method, req) do
       "GET" ->
-        value = PnCounter.Counter.get_value(pid_counter)
+        value = PnCounter.Counter.get_value()
         {:ok, req} = :cowboy_req.reply(200, [], integer_to_binary(value), req)
       _ ->
         {:ok, req} = :cowboy_req.reply(405, req)
     end
-    {:ok, req, pid_counter}
+    {:ok, req, []}
   end
 
-  def terminate(_reason, _req, _pid_counter), do: :ok
+  def terminate(_reason, _req, _), do: :ok
 
 end

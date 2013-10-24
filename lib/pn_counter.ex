@@ -3,12 +3,12 @@ defmodule PnCounter do
 
   def start(_type, _args) do
 
-    {:ok, counter_pid} = PnCounter.Supervisor.start_link()
+    {:ok, _} = PnCounter.Supervisor.start_link()
 
     dispatch = :cowboy_router.compile([
-                { :_, [{"/counter",           PnCounter.Handlers.CounterHandler,   [counter_pid]},
-                       {"/counter/increment", PnCounter.Handlers.IncrementHandler, [counter_pid]},
-                       {"/counter/decrement", PnCounter.Handlers.DecrementHandler, [counter_pid]} ]}
+                { :_, [{"/counter",           PnCounter.Handlers.CounterHandler,   []},
+                       {"/counter/increment", PnCounter.Handlers.IncrementHandler, []},
+                       {"/counter/decrement", PnCounter.Handlers.DecrementHandler, []} ]}
                ])
 
     {:ok, _} = :cowboy.start_http( :http, 100, [{:port, 8000}],

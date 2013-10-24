@@ -26,7 +26,7 @@ defmodule PnCounter.Counter do
   #
 
   def start_link(initial_value) do
-    result = {:ok, pid} = :gen_server.start_link( __MODULE__, initial_value, [])
+    result = {:ok, pid} = :gen_server.start_link({:local, :counter}, __MODULE__, initial_value, [])
     :pg2.create(:pn_counter)
     case :pg2.get_closest_pid(:pn_counter) do
       {:error, _} -> :ok
@@ -39,16 +39,16 @@ defmodule PnCounter.Counter do
     result
   end
 
-  def get_value(pid) do
-    :gen_server.call pid, :get_value
+  def get_value() do
+    :gen_server.call :counter, :get_value
   end
 
-  def increment(pid) do
-    :gen_server.cast pid, :increment
+  def increment() do
+    :gen_server.cast :counter, :increment
   end
 
-  def decrement(pid) do
-    :gen_server.cast pid, :decrement
+  def decrement() do
+    :gen_server.cast :counter, :decrement
   end
 
 

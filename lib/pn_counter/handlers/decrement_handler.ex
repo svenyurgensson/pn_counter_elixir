@@ -1,20 +1,20 @@
 defmodule PnCounter.Handlers.DecrementHandler do
 
-  def init(_transport, req, [pid_counter]) do
-    {:ok, req, pid_counter}
+  def init(_transport, req, []) do
+    {:ok, req, []}
   end
 
-  def handle(req, pid_counter) do
+  def handle(req, _) do
     case :cowboy_req.get(:method, req) do
       "POST" ->
-        PnCounter.Counter.decrement(pid_counter)
+        PnCounter.Counter.decrement()
         {:ok, req} = :cowboy_req.reply(201, [], "", req)
       _ ->
         {:ok, req} = :cowboy_req.reply(405, req)
     end
-    {:ok, req, pid_counter}
+    {:ok, req, []}
   end
 
-  def terminate(_reason, _req, _pid_counter), do: :ok
+  def terminate(_reason, _req, _), do: :ok
 
 end
